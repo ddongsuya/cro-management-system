@@ -270,8 +270,7 @@ function processExcelMockData(rawData: typeof EXCEL_MOCK_DATA_SOURCE): { compani
 
 // Main App Component with Authentication
 const AppContent: React.FC = () => {
-  // TEMPORARY: Skip authentication for testing
-  // const { user, isLoading: authLoading, isAuthenticated } = useAuth();
+  const { user } = useAuth();
   const [companies, setCompanies] = useState<Company[]>([]);
   const [meetings, setMeetings] = useState<Meeting[]>([]);
   const [tasks, setTasks] = useState<Task[]>([]);
@@ -1878,18 +1877,16 @@ const DataExportView: React.FC<DataExportViewProps> = ({ companies, onImportData
 };
 
 // Wrapper component that handles authentication
-// TEMPORARY: Authentication disabled for testing
 const AppWrapper: React.FC = () => {
-  // Skip authentication for now - directly show app content
-  return <AppContent />;
-  
-  /* Original authentication code - will be re-enabled later
   const { isLoading: authLoading, isAuthenticated } = useAuth();
 
   if (authLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <LoadingSpinner size="lg" />
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="text-center">
+          <LoadingSpinner size="lg" />
+          <p className="mt-4 text-gray-600">로딩 중...</p>
+        </div>
       </div>
     );
   }
@@ -1899,15 +1896,11 @@ const AppWrapper: React.FC = () => {
   }
 
   return <AppContent />;
-  */
 };
 
 // User Menu Component
 const UserMenu: React.FC = () => {
-  // TEMPORARY: Skip authentication
-  // const { user, logout } = useAuth();
-  const user = { username: 'Test User', email: 'test@example.com' };
-  const logout = () => console.log('Logout clicked');
+  const { user, logout } = useAuth();
   const [isOpen, setIsOpen] = useState(false);
 
   return (

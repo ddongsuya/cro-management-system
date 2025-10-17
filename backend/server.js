@@ -11,6 +11,7 @@ const companyRoutes = require("./routes/companies");
 const meetingRoutes = require("./routes/meetings");
 const taskRoutes = require("./routes/tasks");
 const notificationRoutes = require("./routes/notifications");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 
@@ -68,6 +69,7 @@ app.use("/api/companies", companyRoutes);
 app.use("/api/meetings", meetingRoutes);
 app.use("/api/tasks", taskRoutes);
 app.use("/api/notifications", notificationRoutes);
+app.use("/api/admin", adminRoutes);
 
 // Health check endpoint
 app.get("/api/health", (req, res) => {

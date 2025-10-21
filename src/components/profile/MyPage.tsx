@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
-import { useAuth } from '../../contexts/AuthContext';
-import { Button, Input, Card } from '../ui/UIComponents';
+import { useAuth } from '../../../contexts/AuthContext';
+import { Button, Input } from '../ui/UIComponents';
+import { Card } from '../../../components';
 
 export const MyPage: React.FC = () => {
   const { user, updateProfile, logout } = useAuth();

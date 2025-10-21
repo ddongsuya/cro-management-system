@@ -10,7 +10,7 @@ import {
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AuthPage } from './components/auth/AuthPage';
 import { LoadingSpinner } from './components/ui/UIComponents';
-import { MyPage } from './components/profile/MyPage';
+import { MyPage } from './src/components/profile/MyPage';
 import { companiesAPI, meetingsAPI, tasksAPI, notificationsAPI } from './services/api';
 import * as XLSX from 'xlsx';
 

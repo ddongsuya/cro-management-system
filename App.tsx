@@ -10,6 +10,7 @@ import {
 import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AuthPage } from './components/auth/AuthPage';
 import { LoadingSpinner } from './components/ui/UIComponents';
+import { MyPage } from './components/profile/MyPage';
 import { companiesAPI, meetingsAPI, tasksAPI, notificationsAPI } from './services/api';
 import * as XLSX from 'xlsx';
 
@@ -497,6 +498,8 @@ const AppContent: React.FC = () => {
         return <DataExportView companies={companies} onImportData={(importedCompanies) => {
           setCompanies(prev => [...prev, ...importedCompanies]);
         }} />;
+      case 'myPage':
+        return <MyPage />;
       default:
         return <DashboardView companies={companies} meetings={meetings} tasks={tasks} onViewTask={() => {}} onViewMeeting={() => {}} />;
     }
@@ -516,7 +519,8 @@ const AppContent: React.FC = () => {
       case 'calendar': return 'Monthly Calendar';
       case 'analytics': return 'Analytics Dashboard';
       case 'dataExport': return 'Data Export';
-      case 'settings': return 'Settings'; 
+      case 'settings': return 'Settings';
+      case 'myPage': return '마이페이지';
       default: 
         const _exhaustiveCheck: never = currentView; 
         return 'CRO Client Hub';
@@ -544,8 +548,9 @@ const AppContent: React.FC = () => {
         <Button variant="ghost" className={`w-full justify-start text-lg ${currentView.type === 'calendar' ? 'bg-brand-primary/20 text-white' : 'hover:bg-brand-primary/10 hover:text-white'}`} onClick={() => handleNavClick({ type: 'calendar' })} leftIcon={<CalendarModernIcon />}>Calendar</Button>
         <Button variant="ghost" className={`w-full justify-start text-lg ${currentView.type === 'analytics' ? 'bg-brand-primary/20 text-white' : 'hover:bg-brand-primary/10 hover:text-white'}`} onClick={() => handleNavClick({ type: 'analytics' })} leftIcon={<ChartPieIcon />}>Analytics</Button>
         <Button variant="ghost" className={`w-full justify-start text-lg ${currentView.type === 'dataExport' ? 'bg-brand-primary/20 text-white' : 'hover:bg-brand-primary/10 hover:text-white'}`} onClick={() => handleNavClick({ type: 'dataExport' })} leftIcon={<ArrowDownTrayIcon />}>Data Export</Button>
-        <div className="mt-auto">
-            <p className="text-xs text-slate-400 text-center">&copy; {new Date().getFullYear()} CRO Consulting</p>
+        <div className="mt-auto space-y-2">
+            <Button variant="ghost" className={`w-full justify-start text-lg ${currentView.type === 'myPage' ? 'bg-brand-primary/20 text-white' : 'hover:bg-brand-primary/10 hover:text-white'}`} onClick={() => handleNavClick({ type: 'myPage' })} leftIcon={<UserCircleIcon />}>마이페이지</Button>
+            <p className="text-xs text-slate-400 text-center pt-2">&copy; {new Date().getFullYear()} CRO Consulting</p>
         </div>
       </nav>
 

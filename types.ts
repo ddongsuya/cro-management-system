@@ -109,7 +109,8 @@ export type View =
   | { type: 'calendar' } 
   | { type: 'analytics' }
   | { type: 'dataExport' }
-  | { type: 'settings' }; 
+  | { type: 'settings' }
+  | { type: 'myPage' }; 
 
 export interface NotificationItem {
   id: string;

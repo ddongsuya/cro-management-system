@@ -297,12 +297,54 @@ const AppContent: React.FC = () => {
 
   const [isNotificationsPanelOpen, setIsNotificationsPanelOpen] = useState(false);
 
-  // TEMPORARY: Load data from localStorage instead of API
+  // Load data from API with localStorage fallback
   useEffect(() => {
-    const loadData = () => {
+    const loadData = async () => {
       setIsLoading(true);
       try {
-        // Load from localStorage
+        // Try to load from API first
+        const [companiesRes, meetingsRes, tasksRes, notificationsRes] = await Promise.all([
+          companiesAPI.getAll().catch(() => null),
+          meetingsAPI.getAll().catch(() => null),
+          tasksAPI.getAll().catch(() => null),
+          notificationsAPI.getAll().catch(() => null),
+        ]);
+
+        if (companiesRes?.data) {
+          setCompanies(companiesRes.data);
+          localStorage.setItem(COMPANIES_STORAGE_KEY, JSON.stringify(companiesRes.data));
+        } else {
+          // Fallback to localStorage
+          const stored = localStorage.getItem(COMPANIES_STORAGE_KEY);
+          if (stored) setCompanies(JSON.parse(stored));
+        }
+
+        if (meetingsRes?.data) {
+          setMeetings(meetingsRes.data);
+          localStorage.setItem(MEETINGS_STORAGE_KEY, JSON.stringify(meetingsRes.data));
+        } else {
+          const stored = localStorage.getItem(MEETINGS_STORAGE_KEY);
+          if (stored) setMeetings(JSON.parse(stored));
+        }
+
+        if (tasksRes?.data) {
+          setTasks(tasksRes.data);
+          localStorage.setItem(TASKS_STORAGE_KEY, JSON.stringify(tasksRes.data));
+        } else {
+          const stored = localStorage.getItem(TASKS_STORAGE_KEY);
+          if (stored) setTasks(JSON.parse(stored));
+        }
+
+        if (notificationsRes?.data) {
+          setNotifications(notificationsRes.data);
+          localStorage.setItem(NOTIFICATIONS_STORAGE_KEY, JSON.stringify(notificationsRes.data));
+        } else {
+          const stored = localStorage.getItem(NOTIFICATIONS_STORAGE_KEY);
+          if (stored) setNotifications(JSON.parse(stored));
+        }
+      } catch (error) {
+        console.error('Failed to load data:', error);
+        // Load from localStorage as fallback
         const storedCompanies = localStorage.getItem(COMPANIES_STORAGE_KEY);
         const storedMeetings = localStorage.getItem(MEETINGS_STORAGE_KEY);
         const storedTasks = localStorage.getItem(TASKS_STORAGE_KEY);
@@ -312,8 +354,6 @@ const AppContent: React.FC = () => {
         if (storedMeetings) setMeetings(JSON.parse(storedMeetings));
         if (storedTasks) setTasks(JSON.parse(storedTasks));
         if (storedNotifications) setNotifications(JSON.parse(storedNotifications));
-      } catch (error) {
-        console.error('Failed to load data:', error);
       } finally {
         setIsLoading(false);
       }
@@ -398,27 +438,57 @@ const AppContent: React.FC = () => {
   }, [tasks, isLoading, generateNotifications]);
 
   // CRUD Operations
-  const handleSaveCompany = (company: Company) => {
+  const handleSaveCompany = async (company: Company) => {
     const isUpdating = companies.some(c => c.id === company.id);
 
-    setCompanies(prev => {
+    try {
       if (isUpdating) {
-        return prev.map(c => (c.id === company.id ? company : c));
+        await companiesAPI.update(company.id, company);
+      } else {
+        await companiesAPI.create(company);
       }
-      return [...prev, company];
-    });
+
+      setCompanies(prev => {
+        if (isUpdating) {
+          return prev.map(c => (c.id === company.id ? company : c));
+        }
+        return [...prev, company];
+      });
+      
+      // Update localStorage backup
+      const updated = isUpdating 
+        ? companies.map(c => (c.id === company.id ? company : c))
+        : [...companies, company];
+      localStorage.setItem(COMPANIES_STORAGE_KEY, JSON.stringify(updated));
+    } catch (error) {
+      console.error('Failed to save company:', error);
+      alert('Failed to save company. Please try again.');
+      return;
+    }
     
     setIsCompanyModalOpen(false);
     setEditingCompany(null);
   };
 
-  const handleDeleteCompany = (companyId: string) => {
+  const handleDeleteCompany = async (companyId: string) => {
     if (window.confirm("Are you sure you want to delete this company and all related data?")) {
-      setCompanies(prev => prev.filter(c => c.id !== companyId));
-      setMeetings(prev => prev.filter(m => m.companyId !== companyId));
-      setTasks(prev => prev.filter(t => t.companyId !== companyId));
-      if (currentView.type === 'clientDetail' && currentView.clientId === companyId) {
-        setCurrentView({ type: 'clientList' });
+      try {
+        await companiesAPI.delete(companyId);
+        
+        setCompanies(prev => prev.filter(c => c.id !== companyId));
+        setMeetings(prev => prev.filter(m => m.companyId !== companyId));
+        setTasks(prev => prev.filter(t => t.companyId !== companyId));
+        
+        // Update localStorage backup
+        const updated = companies.filter(c => c.id !== companyId);
+        localStorage.setItem(COMPANIES_STORAGE_KEY, JSON.stringify(updated));
+        
+        if (currentView.type === 'clientDetail' && currentView.clientId === companyId) {
+          setCurrentView({ type: 'clientList' });
+        }
+      } catch (error) {
+        console.error('Failed to delete company:', error);
+        alert('Failed to delete company. Please try again.');
       }
     }
   };

@@ -11,6 +11,7 @@ import { AuthProvider, useAuth } from './contexts/AuthContext';
 import { AuthPage } from './components/auth/AuthPage';
 import { LoadingSpinner } from './components/ui/UIComponents';
 import { MyPage } from './src/components/profile/MyPage';
+import { ClientTableView } from './src/components/clients/ClientTableView';
 import { companiesAPI, meetingsAPI, tasksAPI, notificationsAPI } from './services/api';
 import * as XLSX from 'xlsx';
 
@@ -955,6 +956,9 @@ interface ClientListViewProps {
 }
 const ClientListView: React.FC<ClientListViewProps> = ({ companies, onAddCompany, onEditCompany, onDeleteCompany, onSelectCompany }) => {
   const isMobile = useIsMobile();
+  const [viewMode, setViewMode] = useState<'card' | 'table'>(() => {
+    return (localStorage.getItem('clientViewMode') as 'card' | 'table') || 'card';
+  });
   const [searchTerm, setSearchTerm] = useState('');
   const [filterDirector, setFilterDirector] = useState('');
   const [filterStandard, setFilterStandard] = useState('');
@@ -978,8 +982,67 @@ const ClientListView: React.FC<ClientListViewProps> = ({ companies, onAddCompany
     return matchesSearch && matchesDirector && matchesStandard;
   });
 
+  const handleViewModeChange = (mode: 'card' | 'table') => {
+    setViewMode(mode);
+    localStorage.setItem('clientViewMode', mode);
+  };
+
+  // 테이블 뷰 모드일 때
+  if (viewMode === 'table' && !isMobile) {
+    return (
+      <div className="space-y-4">
+        <div className="flex items-center justify-between">
+          <h2 className="text-2xl font-bold text-dark-text">Client Companies</h2>
+          <div className="flex items-center space-x-2">
+            <div className="flex bg-gray-100 rounded-lg p-1">
+              <button
+                onClick={() => handleViewModeChange('card')}
+                className="px-3 py-1 rounded text-sm transition"
+              >
+                📇 카드
+              </button>
+              <button
+                onClick={() => handleViewModeChange('table')}
+                className="px-3 py-1 rounded text-sm bg-white shadow transition"
+              >
+                📊 표
+              </button>
+            </div>
+            <Button onClick={onAddCompany} leftIcon={<PlusIcon className="w-5 h-5"/>}>Add Company</Button>
+          </div>
+        </div>
+        <ClientTableView
+          companies={filteredCompanies}
+          onEditCompany={onEditCompany}
+          onDeleteCompany={onDeleteCompany}
+          onSelectCompany={onSelectCompany}
+        />
+      </div>
+    );
+  }
+
   return (
-    <Card title="Client Companies" actions={<Button onClick={onAddCompany} leftIcon={<PlusIcon className="w-5 h-5"/>}>Add Company</Button>}>
+    <Card title="Client Companies" actions={
+      <div className="flex items-center space-x-2">
+        {!isMobile && (
+          <div className="flex bg-gray-100 rounded-lg p-1">
+            <button
+              onClick={() => handleViewModeChange('card')}
+              className="px-3 py-1 rounded text-sm bg-white shadow transition"
+            >
+              📇 카드
+            </button>
+            <button
+              onClick={() => handleViewModeChange('table')}
+              className="px-3 py-1 rounded text-sm transition"
+            >
+              📊 표
+            </button>
+          </div>
+        )}
+        <Button onClick={onAddCompany} leftIcon={<PlusIcon className="w-5 h-5"/>}>Add Company</Button>
+      </div>
+    }>
       {/* Search and Filter Section */}
       <div className="mb-4 space-y-3">
         <div className="grid grid-cols-1 md:grid-cols-3 gap-3">

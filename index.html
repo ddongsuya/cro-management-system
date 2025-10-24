@@ -11,17 +11,40 @@
       theme: {
         extend: {
           colors: {
-            'brand-primary': '#0052CC', // A professional blue
-            'brand-secondary': '#007BFF',
-            'brand-accent': '#00A3BF', // A calm teal/cyan
-            'light-bg': '#F8F9FA',
-            'dark-text': '#212529',
-            'medium-text': '#495057',
-            'light-text': '#6C757D',
-            'success': '#28A745',
-            'warning': '#FFC107',
-            'danger': '#DC3545',
-          }
+            'brand-primary': '#6366F1', // Modern indigo
+            'brand-secondary': '#8B5CF6', // Purple
+            'brand-accent': '#06B6D4', // Cyan
+            'light-bg': '#F9FAFB',
+            'dark-text': '#111827',
+            'medium-text': '#6B7280',
+            'light-text': '#9CA3AF',
+            'success': '#10B981',
+            'warning': '#F59E0B',
+            'danger': '#EF4444',
+          },
+          boxShadow: {
+            'soft': '0 2px 15px -3px rgba(0, 0, 0, 0.07), 0 10px 20px -2px rgba(0, 0, 0, 0.04)',
+            'glow': '0 0 15px rgba(99, 102, 241, 0.3)',
+          },
+          animation: {
+            'fade-in': 'fadeIn 0.5s ease-out',
+            'slide-up': 'slideUp 0.4s ease-out',
+            'scale-in': 'scaleIn 0.3s ease-out',
+          },
+          keyframes: {
+            fadeIn: {
+              '0%': { opacity: '0' },
+              '100%': { opacity: '1' },
+            },
+            slideUp: {
+              '0%': { transform: 'translateY(10px)', opacity: '0' },
+              '100%': { transform: 'translateY(0)', opacity: '1' },
+            },
+            scaleIn: {
+              '0%': { transform: 'scale(0.95)', opacity: '0' },
+              '100%': { transform: 'scale(1)', opacity: '1' },
+            },
+          },
         }
       }
     }

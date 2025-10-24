@@ -12,6 +12,7 @@ import { AuthPage } from './components/auth/AuthPage';
 import { LoadingSpinner } from './components/ui/UIComponents';
 import { MyPage } from './src/components/profile/MyPage';
 import { ClientTableView } from './src/components/clients/ClientTableView';
+import { ModernDashboard } from './src/components/dashboard/ModernDashboard';
 import { companiesAPI, meetingsAPI, tasksAPI, notificationsAPI } from './services/api';
 import * as XLSX from 'xlsx';
 
@@ -530,7 +531,7 @@ const AppContent: React.FC = () => {
   const renderView = () => {
     switch (currentView.type) {
       case 'dashboard':
-        return <DashboardView companies={companies} meetings={meetings} tasks={tasks} onViewTask={(task) => {
+        return <ModernDashboard companies={companies} meetings={meetings} tasks={tasks} onViewTask={(task) => {
           setCurrentView({type: 'clientDetail', clientId: task.companyId});
         }} onViewMeeting={(meeting) => {
           setCurrentView({type: 'clientDetail', clientId: meeting.companyId});
@@ -572,7 +573,7 @@ const AppContent: React.FC = () => {
       case 'myPage':
         return <MyPage />;
       default:
-        return <DashboardView companies={companies} meetings={meetings} tasks={tasks} onViewTask={() => {}} onViewMeeting={() => {}} />;
+        return <ModernDashboard companies={companies} meetings={meetings} tasks={tasks} onViewTask={() => {}} onViewMeeting={() => {}} />;
     }
   };
 

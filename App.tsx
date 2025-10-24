@@ -609,7 +609,7 @@ const AppContent: React.FC = () => {
       {/* Sidebar */}
       <nav className={`fixed inset-y-0 left-0 z-40 w-64 bg-dark-text text-slate-100 p-5 space-y-2 flex flex-col shadow-lg transform transition-transform duration-300 ease-in-out ${isMobileSidebarOpen ? 'translate-x-0' : '-translate-x-full'} md:static md:translate-x-0 md:shadow-lg md:flex-shrink-0`}>
         <div className="flex justify-between items-center">
-            <h1 className="text-3xl font-bold text-center text-brand-accent mb-6">CRO Hub</h1>
+            <h1 className="text-3xl font-bold text-center text-brand-accent mb-6">CSCO BD Management</h1>
             <Button variant="ghost" className="md:hidden text-white p-0 -mt-6" onClick={() => setIsMobileSidebarOpen(false)} aria-label="Close sidebar">
                 <XMarkIcon className="w-6 h-6" />
             </Button>
@@ -622,7 +622,7 @@ const AppContent: React.FC = () => {
         <Button variant="ghost" className={`w-full justify-start text-lg ${currentView.type === 'dataExport' ? 'bg-brand-primary/20 text-white' : 'hover:bg-brand-primary/10 hover:text-white'}`} onClick={() => handleNavClick({ type: 'dataExport' })} leftIcon={<ArrowDownTrayIcon />}>Data Export</Button>
         <div className="mt-auto space-y-2">
             <Button variant="ghost" className={`w-full justify-start text-lg ${currentView.type === 'myPage' ? 'bg-brand-primary/20 text-white' : 'hover:bg-brand-primary/10 hover:text-white'}`} onClick={() => handleNavClick({ type: 'myPage' })} leftIcon={<UserCircleIcon />}>마이페이지</Button>
-            <p className="text-xs text-slate-400 text-center pt-2">&copy; {new Date().getFullYear()} CRO Consulting</p>
+            <p className="text-xs text-slate-400 text-center pt-2">&copy; DDSU Inc. All Rights Reserved.</p>
         </div>
       </nav>
 
